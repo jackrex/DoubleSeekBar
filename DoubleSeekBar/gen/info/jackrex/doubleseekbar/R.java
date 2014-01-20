@@ -94,11 +94,15 @@ containing a value of this type.
         public static final int slide_up=0x7f020006;
     }
     public static final class id {
-        public static final int SurplusSeekBar=0x7f040003;
-        public static final int action_settings=0x7f040005;
+        public static final int action_settings=0x7f040009;
+        public static final int addoil=0x7f040005;
+        public static final int doubleseekview=0x7f040007;
+        public static final int editText1=0x7f040004;
         public static final int fill_parent=0x7f040000;
         public static final int match_parent=0x7f040001;
-        public static final int rtRemainOil=0x7f040004;
+        public static final int oilbox=0x7f040006;
+        public static final int rtRemainOil=0x7f040008;
+        public static final int textView1=0x7f040003;
         public static final int wrap_content=0x7f040002;
     }
     public static final class layout {

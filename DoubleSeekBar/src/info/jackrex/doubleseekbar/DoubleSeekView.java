@@ -1,4 +1,4 @@
-package cn.cafecar.android.view.helpview;
+package info.jackrex.doubleseekbar;
 
 import java.math.BigDecimal;
 
@@ -17,7 +17,6 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import cn.cafecar.android.R;
 
 /**
  * @author Jackrex
@@ -50,7 +49,7 @@ public class DoubleSeekView extends View {
 	private Drawable mKedu;
 	
 	private int mScollBarWidth;
-	private int mScollBarHeight = 30 ;
+	private int mScollBarHeight = 0;
 
 	private int mThumbWidth;
 	private int mThumbHeight;
@@ -68,6 +67,8 @@ public class DoubleSeekView extends View {
 	
 	
 	private boolean isMiddle = false;
+	
+	private Context context;
 	
 
 	public void setmMiddleLength(int mMiddleLength) {
@@ -116,6 +117,7 @@ public class DoubleSeekView extends View {
 	public DoubleSeekView(Context context) {
 		// TODO Auto-generated constructor stub
 		this(context, null);
+		this.context = context;
 	}
 
 	public DoubleSeekView(Context context, AttributeSet attrs, int defStyle) {
@@ -129,8 +131,6 @@ public class DoubleSeekView extends View {
 		mScollBarHeight = array.getLayoutDimension(R.styleable.SeekBarPressure_height, "layout_height");
 		array.recycle();
 		
-//		DisplayMetrics metrics=getContext().getApplicationContext().getResources().getDisplayMetrics();
-//		mScollBarWidth=metrics.widthPixels;
 		
 		mScollBarWidth = mKedu.getIntrinsicWidth();
 		
@@ -162,7 +162,6 @@ public class DoubleSeekView extends View {
 		
 		slide_title_weith = res.getDrawable( R.drawable.slide_title).getIntrinsicWidth();
 		
-		//mScrollBarProgressMiddle = res.getDrawable(R.drawable.slide_title);
 		mKedu = res.getDrawable(R.drawable.kedu);
 		mThumbLow = res.getDrawable(R.drawable.slide_up);
 		mThumbHigh = res.getDrawable(R.drawable.slide_down);
@@ -234,7 +233,7 @@ public class DoubleSeekView extends View {
 		mThumbLow.draw(canvas);
 		mThumbHigh.draw(canvas);
 		
-		
+
 		
 		Paint paint = new Paint();
 		paint.setColor(Color.parseColor("#B5B5B5"));
@@ -402,8 +401,7 @@ public class DoubleSeekView extends View {
 	public int getAreaFlag(MotionEvent e) {
 
     	
-//	   int top = 50;
-//       int bottom = mThumbHeight+50;
+
 		
 		int progressHeight = mThumbHeight/2-15;
 		int progressBottom = progressHeight+30;
