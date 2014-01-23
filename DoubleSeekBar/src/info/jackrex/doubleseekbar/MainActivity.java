@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
 						
 						float percent = oil.floatValue()/box.floatValue();
 						Log.e("percent is :", percent+"");
-						int length = (int) (percent * doubleSeekView.getScrollBarWidth());
+						int length = (int) (percent * doubleSeekView.getTotal());
 						doubleSeekView.setmMiddleLength(length);
 						
 					}
