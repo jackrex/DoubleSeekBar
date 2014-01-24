@@ -270,32 +270,50 @@ public class DoubleSeekView extends View {
 			} else if (mFlag == CLICK_ON_HIGH) {
 
 				mThumbHigh.setState(STATE_PRESSED);
-			} else if (mFlag == CLICK_IN_LOW_AREA) {
+			}
+			
+			
+			else if (mFlag == CLICK_IN_LOW_AREA) {
 
 				mThumbLow.setState(STATE_PRESSED);
-				if (event.getX() <= mOffsetLowInit) {
-					mOffsetLow = mOffsetLowInit;
-					mOffsetHigh = mOffsetLow + mMiddleLength;
-
-				} else {
-					mOffsetLow = formatInt(event.getX());
-					mOffsetHigh = mOffsetLow + mMiddleLength;
-					if (mOffsetLow <= mOffsetLowInit) {
-						mOffsetLow = mOffsetLowInit;
-						mOffsetHigh = mOffsetLow + mMiddleLength;
-					}
-
-				}
+				
+//				if (event.getX() <= mOffsetLowInit) {
+//					mOffsetLow = mOffsetLowInit;
+//					mOffsetHigh = mOffsetLow + mMiddleLength;
+//
+//				} else {
+//					mOffsetLow = formatInt(event.getX());
+//					mOffsetHigh = mOffsetLow + mMiddleLength;
+//					if (mOffsetLow <= mOffsetLowInit) {
+//						mOffsetLow = mOffsetLowInit;
+//						mOffsetHigh = mOffsetLow + mMiddleLength;
+//					}
+//
+//				}
+				
+				lowOffset =  mOffsetLow - event.getX() ;
+			//	highOffset = mOffsetHigh - event.getX();
+				
+				
+				
 			} else if (mFlag == CLICK_IN_HIGH_AREA) {
 
-				if (event.getX() >= mScollBarWidth - mThumbWidth / 6) {
-					mOffsetHigh = mScollBarWidth - mThumbWidth / 6;
-					mOffsetLow = mOffsetHigh - mMiddleLength;
-				} else {
-					mOffsetHigh = formatInt(event.getX());
-					mOffsetLow = mOffsetHigh - mMiddleLength;
-				}
-			} else if (mFlag == CLICK_MIDDLE) {
+//				if (event.getX() >= mScollBarWidth - mThumbWidth / 6) {
+//					mOffsetHigh = mScollBarWidth - mThumbWidth / 6;
+//					mOffsetLow = mOffsetHigh - mMiddleLength;
+//				} else {
+//					mOffsetHigh = formatInt(event.getX());
+//					mOffsetLow = mOffsetHigh - mMiddleLength;
+//				}
+				
+				
+				
+				highOffset =   event.getX() - mOffsetHigh;
+				
+			}
+			
+			
+			else if (mFlag == CLICK_MIDDLE) {
 
 				lowOffset = event.getX() - mOffsetLow;
 				highOffset = mOffsetHigh - event.getX();
@@ -304,6 +322,7 @@ public class DoubleSeekView extends View {
 
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 
+			
 			if (mFlag == CLICK_MIDDLE) {
 
 				if (isMiddle) {
@@ -355,6 +374,48 @@ public class DoubleSeekView extends View {
 				}
 
 			}
+			
+			else if (mFlag == CLICK_IN_LOW_AREA) {
+
+				int realLow = formatInt(event.getX() + lowOffset);
+				int realHigh = realLow + mMiddleLength;
+
+				if (realLow <= mOffsetLowInit) {
+					mOffsetLow = mOffsetLowInit;
+					mOffsetHigh = mOffsetLow + mMiddleLength;
+				} else if (realHigh >= mScollBarWidth - mThumbWidth / 6) {
+					mOffsetHigh = mScollBarWidth - mThumbWidth / 6;
+					mOffsetLow = mOffsetHigh - mMiddleLength;
+				} else {
+					mOffsetLow = realLow;
+					mOffsetHigh = realHigh;
+
+				}
+				
+				
+				
+				
+			} else if (mFlag == CLICK_IN_HIGH_AREA) {
+
+				int realHigh = formatInt(event.getX() - highOffset);
+				int realLow = realHigh - mMiddleLength;
+
+				if (realLow <= mOffsetLowInit) {
+					mOffsetLow = mOffsetLowInit;
+					mOffsetHigh = mOffsetLow + mMiddleLength;
+				} else if (realHigh >= mScollBarWidth - mThumbWidth / 6) {
+					mOffsetHigh = mScollBarWidth - mThumbWidth / 6;
+					mOffsetLow = mOffsetHigh - mMiddleLength;
+				} else {
+					mOffsetLow = realLow;
+					mOffsetHigh = realHigh;
+
+				}
+			}
+			
+			
+			
+			
 
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mThumbLow.setState(STATE_NORMAL);
@@ -411,17 +472,15 @@ public class DoubleSeekView extends View {
 				&& e.getX() >= mOffsetLow - mThumbWidth / 2 + mMiddleLength
 				&& e.getX() <= mOffsetLow + mThumbWidth / 2 + mMiddleLength) {
 			return CLICK_ON_HIGH;
-		} else if (e.getY() >= 0 && e.getY() <= mThumbHeight
-				&& ((e.getX() >= 0 && e.getX() < mOffsetLow))) {
+		} else if (e.getY() >= 0 - 2*mThumbWidth  && e.getY() <= mThumbHeight + 2*mThumbWidth
+				&& ((e.getX() >= 0 - 2*mThumbWidth && e.getX() < mOffsetLow))) {
 			return CLICK_IN_LOW_AREA;
-		} else if (e.getY() >= 0
-				&& e.getY() <= mThumbHeight
-				&& ((e.getX() > mOffsetHigh + mThumbWidth && e.getX() <= mScollBarWidth))) {
+		} else if (e.getY() >= 0 - 2*mThumbWidth
+				&& e.getY() <= mThumbHeight + 2*mThumbWidth
+				&& ((e.getX() > mOffsetHigh + mThumbWidth && e.getX() <= mScollBarWidth + 2*mThumbWidth))) {
 			return CLICK_IN_HIGH_AREA;
-		} else if (!(e.getX() >= 0 && e.getX() <= mScollBarWidth
-				&& e.getY() >= top && e.getY() <= bottom)) {
-			return CLICK_OUT_AREA;
-		}
+		} 
+
 
 		else {
 			return CLICK_INVAILD;
