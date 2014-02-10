@@ -135,6 +135,8 @@ public class DoubleSeekView extends View {
 				/ total) * 100);
 
 	}
+	
+	int mScrollBarHeight = 0;
 
 	private void init(Context context) {
 		// TODO Auto-generated method stub
@@ -142,6 +144,8 @@ public class DoubleSeekView extends View {
 		mScrollBarBgNormal = res.getDrawable(R.drawable.slide_bg_white);
 		mScrollBarProgressed = res.getDrawable(R.drawable.slide_bg);
 
+		mScrollBarHeight = mScrollBarBgNormal.getIntrinsicHeight();
+		
 		progressedDrawable = new BitmapDrawable(BitmapFactory.decodeResource(
 				getResources(), R.drawable.slide_title));
 		progressedDrawable.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
@@ -149,7 +153,8 @@ public class DoubleSeekView extends View {
 
 		bitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.slide_title);
-
+		;
+		//bitmap.setHeight(DesityUtil.dip2px(getContext(), Float.valueOf(bitmap.getHeight())));
 		slide_title_weith = res.getDrawable(R.drawable.slide_title)
 				.getIntrinsicWidth();
 
@@ -158,7 +163,7 @@ public class DoubleSeekView extends View {
 		mThumbHigh = res.getDrawable(R.drawable.slide_down);
 		mThumbWidth = mThumbLow.getIntrinsicWidth();
 		mThumbHeight = mThumbLow.getIntrinsicHeight();
-
+		Log.e("ThumbHeight", mThumbHeight+"");
 	}
 
 	@Override
@@ -178,12 +183,21 @@ public class DoubleSeekView extends View {
 
 		// progressH=50 50/1.5=33.4dp
 		int progressHeight = mThumbHeight / 2 - 15;
-		int progressBottom = progressHeight + 30;
-
-		int textTop1Height = thumbHeight + 20;// 加油前
-		int textTop2Height = thumbHeight + 45;// 32%
-		int textBot1Height = thumbBottom - 10;// 76%
-		int textBot2Height = thumbBottom - 35;// 加油后
+		//int progressBottom = progressHeight + 30;
+		int progressBottom = progressHeight + mScrollBarHeight;
+//		int textTop1Height =  DesityUtil.dip2px(getContext(), Float.valueOf(thumbHeight + 20)) ;// 加油前
+//		int textTop2Height = thumbHeight + 45;// 32%
+//		int textBot1Height = thumbBottom - 10;// 76%
+//		int textBot2Height = thumbBottom - 35;// 加油后
+		
+		
+		
+		int textTop1Height = thumbHeight + DesityUtil.dip2px(getContext(), Float.valueOf( 20)) ;// 加油前
+		int textTop2Height =  thumbHeight + DesityUtil.dip2px(getContext(), Float.valueOf(45));// 32%
+		int textBot1Height = thumbBottom - DesityUtil.dip2px(getContext(), Float.valueOf( 10));// 76%
+		int textBot2Height = thumbBottom - DesityUtil.dip2px(getContext(), Float.valueOf(35));// 加油后
+		
+		
 
 		mScrollBarBgNormal.setBounds(padding, progressHeight, mScollBarWidth
 				+ padding, progressBottom);
@@ -193,6 +207,7 @@ public class DoubleSeekView extends View {
 				+ mOffsetLow, progressBottom);
 		mScrollBarProgressed.draw(canvas);
 
+	
 		// use BitmapDrawable repeat but it works not well
 		// progressedDrawable.setBounds(mOffsetLow+mThumbWidth/2,
 		// progressHeight, mOffsetLow+mThumbWidth/2+mMiddleLength,
@@ -204,8 +219,10 @@ public class DoubleSeekView extends View {
 		int count = (mMiddleLength + mThumbWidth) / slide_title_weith - 3;
 
 		for (int i = 0; i < count; i++) {
+
 			canvas.drawBitmap(bitmap, mOffsetLow + mThumbWidth / 2 + i
 					* slide_title_weith, progressHeight, null);
+			
 		}
 
 		// this can't repeat
@@ -230,13 +247,13 @@ public class DoubleSeekView extends View {
 		paint.setColor(Color.parseColor("#B5B5B5"));
 		paint.setStrokeWidth(3);
 		paint.setTextAlign(Align.CENTER);
-		paint.setTextSize(15);
+		paint.setTextSize(DesityUtil.dip2px(getContext(), Float.valueOf( 15)));
 
 		Paint paintNum = new Paint();
 		paintNum.setColor(Color.parseColor("#767676"));
 		paintNum.setStrokeWidth(3);
 		paintNum.setTextAlign(Align.CENTER);
-		paintNum.setTextSize(25);
+		paintNum.setTextSize(DesityUtil.dip2px(getContext(), Float.valueOf( 25)));
 
 		canvas.drawText("加油前", mOffsetLow + mThumbWidth / 2, textTop1Height,
 				paint);

@@ -1,6 +1,7 @@
 package info.jackrex.doubleseekbar;
 
 import android.content.Context;
+import android.util.Log;
 
 public class DesityUtil {
 
@@ -9,7 +10,8 @@ public class DesityUtil {
      */  
     public static int dip2px(Context context, float dpValue) {  
         final float scale = context.getResources().getDisplayMetrics().density;  
-        return (int) (dpValue * scale + 0.5f);  
+        Log.e("desitiny", scale +"");
+        return (int) (dpValue * scale /1.5 + 0.5f);  
     }  
   
     /** 
@@ -17,7 +19,7 @@ public class DesityUtil {
      */  
     public static int px2dip(Context context, float pxValue) {  
         final float scale = context.getResources().getDisplayMetrics().density;  
-        return (int) (pxValue / scale + 0.5f);  
+        return (int) (pxValue / scale  + 0.5f);  
     }  
 	
 	
