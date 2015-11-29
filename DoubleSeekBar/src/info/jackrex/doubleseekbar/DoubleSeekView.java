@@ -1,7 +1,5 @@
 package info.jackrex.doubleseekbar;
 
-import java.math.BigDecimal;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -15,9 +13,10 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.math.BigDecimal;
 
 /**
  * @author Jackrex
@@ -29,7 +28,6 @@ public class DoubleSeekView extends View {
 	private static final int CLICK_ON_HIGH = 2;
 	private static final int CLICK_IN_LOW_AREA = 3;
 	private static final int CLICK_IN_HIGH_AREA = 4;
-	private static final int CLICK_OUT_AREA = 5;
 	private static final int CLICK_INVAILD = 0;
 	private static final int CLICK_MIDDLE = 6;
 
@@ -39,9 +37,7 @@ public class DoubleSeekView extends View {
 	private Drawable mScrollBarBgNormal;
 	private Drawable mScrollBarProgressed;
 
-	private BitmapDrawable progressedDrawable;
-
-	private Drawable mThumbLow;
+    	private Drawable mThumbLow;
 	private Drawable mThumbHigh;
 
 	private Drawable mKedu;
@@ -52,19 +48,15 @@ public class DoubleSeekView extends View {
 	private int mThumbHeight;
 
 	private int mMiddleLength = 0;
-
 	private int mOffsetLow = 0;
 	private int mOffsetHigh = mOffsetLow + mMiddleLength;
-
 	private int mOffsetLowInit;
 
 	private Bitmap bitmap;
-
 	private boolean isMiddle = false;
 
-	public void setmMiddleLength(int mMiddleLength) {
+	public void setMiddleLength(int mMiddleLength) {
 		mOffsetHigh = mOffsetLow + mMiddleLength;
-
 		if (mOffsetHigh >= mScollBarWidth - mThumbWidth / 6) {
 			mOffsetHigh = mScollBarWidth - mThumbWidth / 6;
 			mOffsetLow = mOffsetLowInit;
@@ -85,15 +77,11 @@ public class DoubleSeekView extends View {
 	private float mMax = 0;
 	private int mFlag = CLICK_INVAILD;
 	private OnSeekBarChangeListener mBarChangeListener;
-
 	private int preOil = 0;
 	private int aftOil = 100;
-
 	private int padding = 0;
-
 	private int total;
-
-	private int slide_title_weith;
+	private int slide_title_width;
 
 	public DoubleSeekView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
@@ -108,7 +96,6 @@ public class DoubleSeekView extends View {
 	public DoubleSeekView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context);
-
 		TypedArray array = context.obtainStyledAttributes(attrs,
 				R.styleable.SeekBarPressure, defStyle, 0);
 		mMin = array.getFloat(R.styleable.SeekBarPressure_minValue, mMin);
@@ -118,9 +105,6 @@ public class DoubleSeekView extends View {
 		array.recycle();
 
 		mScollBarWidth = mKedu.getIntrinsicWidth();
-
-		Log.e("mScollBarWidth", mScollBarWidth + "");
-
 		padding = padding + mThumbWidth / 2;
 
 		mOffsetLow = mThumbWidth / 6; // 初始值 不为0 padding -mThumbWidth/3
@@ -128,12 +112,9 @@ public class DoubleSeekView extends View {
 		mOffsetLowInit = mOffsetLow;
 
 		mOffsetHigh = mOffsetLow + mMiddleLength;
-
-		// total =formatInt((mScollBarWidth - mThumbWidth/2)*((float)103/100));
 		total = mScollBarWidth - mThumbWidth / 3;
 		aftOil = (int) (formatFloat((float) (mOffsetHigh - mOffsetLowInit)
 				/ total) * 100);
-
 	}
 	
 	int mScrollBarHeight = 0;
@@ -145,17 +126,15 @@ public class DoubleSeekView extends View {
 		mScrollBarProgressed = res.getDrawable(R.drawable.slide_bg);
 
 		mScrollBarHeight = mScrollBarBgNormal.getIntrinsicHeight();
-		
-		progressedDrawable = new BitmapDrawable(BitmapFactory.decodeResource(
-				getResources(), R.drawable.slide_title));
+
+	        BitmapDrawable progressedDrawable = new BitmapDrawable(BitmapFactory.decodeResource(
+		    getResources(), R.drawable.slide_title));
 		progressedDrawable.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
 		progressedDrawable.setDither(true);
 
 		bitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.slide_title);
-		;
-		//bitmap.setHeight(DesityUtil.dip2px(getContext(), Float.valueOf(bitmap.getHeight())));
-		slide_title_weith = res.getDrawable(R.drawable.slide_title)
+			R.drawable.slide_title);
+		slide_title_width = res.getDrawable(R.drawable.slide_title)
 				.getIntrinsicWidth();
 
 		mKedu = res.getDrawable(R.drawable.kedu);
@@ -163,12 +142,10 @@ public class DoubleSeekView extends View {
 		mThumbHigh = res.getDrawable(R.drawable.slide_down);
 		mThumbWidth = mThumbLow.getIntrinsicWidth();
 		mThumbHeight = mThumbLow.getIntrinsicHeight();
-		Log.e("ThumbHeight", mThumbHeight+"");
 	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
 		int width = mScollBarWidth + mThumbWidth;
 		int height = mThumbHeight;
 		setMeasuredDimension(width, height);
@@ -181,23 +158,17 @@ public class DoubleSeekView extends View {
 		int thumbHeight = 0;
 		int thumbBottom = thumbHeight + mThumbHeight;
 
-		// progressH=50 50/1.5=33.4dp
 		int progressHeight = mThumbHeight / 2 - 15;
-		//int progressBottom = progressHeight + 30;
 		int progressBottom = progressHeight + mScrollBarHeight;
-//		int textTop1Height =  DesityUtil.dip2px(getContext(), Float.valueOf(thumbHeight + 20)) ;// 加油前
-//		int textTop2Height = thumbHeight + 45;// 32%
-//		int textBot1Height = thumbBottom - 10;// 76%
-//		int textBot2Height = thumbBottom - 35;// 加油后
-		
-		
-		
-		int textTop1Height = thumbHeight + DesityUtil.dip2px(getContext(), Float.valueOf( 20)) ;// 加油前
-		int textTop2Height =  thumbHeight + DesityUtil.dip2px(getContext(), Float.valueOf(45));// 32%
-		int textBot1Height = thumbBottom - DesityUtil.dip2px(getContext(), Float.valueOf( 10));// 76%
-		int textBot2Height = thumbBottom - DesityUtil.dip2px(getContext(), Float.valueOf(35));// 加油后
-		
-		
+
+		int textTop1Height = thumbHeight + ResolutionUtil
+			.dip2px(getContext(), Float.valueOf(20)) ;// 加油前
+		int textTop2Height =  thumbHeight + ResolutionUtil
+			.dip2px(getContext(), Float.valueOf(45));// 32%
+		int textBot1Height = thumbBottom - ResolutionUtil
+			.dip2px(getContext(), Float.valueOf(10));// 76%
+		int textBot2Height = thumbBottom - ResolutionUtil
+			.dip2px(getContext(), Float.valueOf(35));// 加油后
 
 		mScrollBarBgNormal.setBounds(padding, progressHeight, mScollBarWidth
 				+ padding, progressBottom);
@@ -207,29 +178,13 @@ public class DoubleSeekView extends View {
 				+ mOffsetLow, progressBottom);
 		mScrollBarProgressed.draw(canvas);
 
-	
-		// use BitmapDrawable repeat but it works not well
-		// progressedDrawable.setBounds(mOffsetLow+mThumbWidth/2,
-		// progressHeight, mOffsetLow+mThumbWidth/2+mMiddleLength,
-		// progressBottom);
-		// progressedDrawable.draw(canvas);
-
-		// I use For statement to make it
-
-		int count = (mMiddleLength + mThumbWidth) / slide_title_weith - 3;
+		int count = (mMiddleLength + mThumbWidth) / slide_title_width - 3;
 
 		for (int i = 0; i < count; i++) {
 
 			canvas.drawBitmap(bitmap, mOffsetLow + mThumbWidth / 2 + i
-					* slide_title_weith, progressHeight, null);
-			
+					* slide_title_width, progressHeight, null);
 		}
-
-		// this can't repeat
-		// mScrollBarProgressMiddle.setBounds(mOffsetLow+mThumbWidth/2,
-		// progressHeight, mOffsetLow+mThumbWidth/2+mMiddleLength,
-		// progressBottom);
-		// mScrollBarProgressMiddle.draw(canvas);
 
 		mKedu.setBounds(padding, progressBottom, mScollBarWidth + padding,
 				progressBottom + mKedu.getIntrinsicHeight());
@@ -247,13 +202,13 @@ public class DoubleSeekView extends View {
 		paint.setColor(Color.parseColor("#B5B5B5"));
 		paint.setStrokeWidth(3);
 		paint.setTextAlign(Align.CENTER);
-		paint.setTextSize(DesityUtil.dip2px(getContext(), Float.valueOf( 15)));
+		paint.setTextSize(ResolutionUtil.dip2px(getContext(), Float.valueOf(15)));
 
 		Paint paintNum = new Paint();
 		paintNum.setColor(Color.parseColor("#767676"));
 		paintNum.setStrokeWidth(3);
 		paintNum.setTextAlign(Align.CENTER);
-		paintNum.setTextSize(DesityUtil.dip2px(getContext(), Float.valueOf( 25)));
+		paintNum.setTextSize(ResolutionUtil.dip2px(getContext(), Float.valueOf(25)));
 
 		canvas.drawText("加油前", mOffsetLow + mThumbWidth / 2, textTop1Height,
 				paint);
@@ -266,7 +221,6 @@ public class DoubleSeekView extends View {
 				/ 2, textBot1Height, paintNum);
 
 		if (mBarChangeListener != null) {
-
 			mBarChangeListener.onProgressChanged(this, preOil, aftOil);
 		}
 
@@ -280,66 +234,23 @@ public class DoubleSeekView extends View {
 		// TODO Auto-generated method stub
 		mFlag = getAreaFlag(event);
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
 			if (mFlag == CLICK_ON_LOW) {
 				mThumbLow.setState(STATE_PRESSED);
 
 			} else if (mFlag == CLICK_ON_HIGH) {
-
 				mThumbHigh.setState(STATE_PRESSED);
-			}
-			
-			
-			else if (mFlag == CLICK_IN_LOW_AREA) {
-
+			} else if (mFlag == CLICK_IN_LOW_AREA) {
 				mThumbLow.setState(STATE_PRESSED);
-				
-//				if (event.getX() <= mOffsetLowInit) {
-//					mOffsetLow = mOffsetLowInit;
-//					mOffsetHigh = mOffsetLow + mMiddleLength;
-//
-//				} else {
-//					mOffsetLow = formatInt(event.getX());
-//					mOffsetHigh = mOffsetLow + mMiddleLength;
-//					if (mOffsetLow <= mOffsetLowInit) {
-//						mOffsetLow = mOffsetLowInit;
-//						mOffsetHigh = mOffsetLow + mMiddleLength;
-//					}
-//
-//				}
-				
 				lowOffset =  mOffsetLow - event.getX() ;
-			//	highOffset = mOffsetHigh - event.getX();
-				
-				
-				
 			} else if (mFlag == CLICK_IN_HIGH_AREA) {
-
-//				if (event.getX() >= mScollBarWidth - mThumbWidth / 6) {
-//					mOffsetHigh = mScollBarWidth - mThumbWidth / 6;
-//					mOffsetLow = mOffsetHigh - mMiddleLength;
-//				} else {
-//					mOffsetHigh = formatInt(event.getX());
-//					mOffsetLow = mOffsetHigh - mMiddleLength;
-//				}
-				
-				
-				
 				highOffset =   event.getX() - mOffsetHigh;
-				
-			}
-			
-			
-			else if (mFlag == CLICK_MIDDLE) {
-
+			} else if (mFlag == CLICK_MIDDLE) {
 				lowOffset = event.getX() - mOffsetLow;
 				highOffset = mOffsetHigh - event.getX();
 				isMiddle = true;
 			}
 
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-
-			
 			if (mFlag == CLICK_MIDDLE) {
 
 				if (isMiddle) {
@@ -356,14 +267,10 @@ public class DoubleSeekView extends View {
 					} else {
 						mOffsetLow = realLow;
 						mOffsetHigh = realHigh;
-
 					}
-
 				}
 
-			} 
-			
-			else if (mFlag == CLICK_ON_LOW) {
+			} else if (mFlag == CLICK_ON_LOW) {
 
 				mOffsetLow = formatInt(event.getX());
 				mOffsetHigh = mOffsetLow + mMiddleLength;
@@ -390,9 +297,7 @@ public class DoubleSeekView extends View {
 					mOffsetLow = mOffsetHigh - mMiddleLength;
 				}
 
-			}
-			
-			else if (mFlag == CLICK_IN_LOW_AREA) {
+			} else if (mFlag == CLICK_IN_LOW_AREA) {
 
 				int realLow = formatInt(event.getX() + lowOffset);
 				int realHigh = realLow + mMiddleLength;
@@ -406,12 +311,7 @@ public class DoubleSeekView extends View {
 				} else {
 					mOffsetLow = realLow;
 					mOffsetHigh = realHigh;
-
 				}
-				
-				
-				
-				
 			} else if (mFlag == CLICK_IN_HIGH_AREA) {
 
 				int realHigh = formatInt(event.getX() - highOffset);
@@ -426,27 +326,19 @@ public class DoubleSeekView extends View {
 				} else {
 					mOffsetLow = realLow;
 					mOffsetHigh = realHigh;
-
 				}
 			}
-			
-			
-			
-			
-
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
 			mThumbLow.setState(STATE_NORMAL);
 			mThumbHigh.setState(STATE_NORMAL);
 			isMiddle = false;
 		}
 		resetProgress(mOffsetLow, mOffsetHigh);
-
 		return true;
 	}
 
 	private void resetProgress(int mOffsetLow2, int mOffsetHigh2) {
 		// TODO Auto-generated method stub
-
 		preOil = (int) (formatFloat((float) (mOffsetLow2 - mOffsetLowInit)
 				/ total) * 100);
 		aftOil = (int) (formatFloat((float) (mOffsetHigh2 - mOffsetLowInit)
@@ -463,12 +355,6 @@ public class DoubleSeekView extends View {
 	}
 
 	public int getAreaFlag(MotionEvent e) {
-
-		int progressHeight = mThumbHeight / 2 - 15;
-		int progressBottom = progressHeight + 30;
-
-		int top = progressHeight;
-		int bottom = progressBottom;
 
 		int thumb1Top = 0;
 		int thumb1Bottom = mThumbHeight / 2 + 15;
@@ -496,16 +382,13 @@ public class DoubleSeekView extends View {
 				&& e.getY() <= mThumbHeight + 2*mThumbWidth
 				&& ((e.getX() > mOffsetHigh + mThumbWidth && e.getX() <= mScollBarWidth + 2*mThumbWidth))) {
 			return CLICK_IN_HIGH_AREA;
-		} 
-
-
-		else {
+		} else {
 			return CLICK_INVAILD;
 		}
 	}
 
 	public interface OnSeekBarChangeListener {
-		public void onProgressChanged(DoubleSeekView seekBar, int preOil,
+	     void onProgressChanged(DoubleSeekView seekBar, int preOil,
 				int afterOil);
 	}
 
